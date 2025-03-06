@@ -10,7 +10,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToOne;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
+// import com.fasterxml.jackson.annotation.JsonBackReference;
 
 import java.util.Date;
 
@@ -24,14 +24,18 @@ public class Book {
     private String title;
     private Date releaseDate;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "id_author", nullable = false)
-	@JsonBackReference
+	// Use JsonBackReference to avoid failing on empty beans when FetchType.LAZY is used
+	// (https://stackoverflow.com/q/52656517)
+	// @JsonBackReference
     private Author author;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "id_publisher", nullable = false)
-	@JsonBackReference
+	// Use JsonBackReference to avoid failing on empty beans when FetchType.LAZY is used
+	// (https://stackoverflow.com/q/52656517)
+	// @JsonBackReference
     private Publisher publisher;
 
 	public Integer getId() {
