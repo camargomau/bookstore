@@ -4,6 +4,8 @@ import com.camargomau.bookstore.model.Book;
 import com.camargomau.bookstore.repository.BookRepository;
 import com.camargomau.bookstore.repository.AuthorRepository;
 import com.camargomau.bookstore.repository.PublisherRepository;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.bind.annotation.*;
@@ -12,6 +14,7 @@ import java.util.Date;
 
 @RestController
 @RequestMapping("/books")
+@Tag(name = "Book", description = "Endpoints for managing books")
 public class BookController {
     @Autowired
     private BookRepository bookRepository;
@@ -22,18 +25,17 @@ public class BookController {
     @Autowired
     private PublisherRepository publisherRepository;
 
-    // GET
     @GetMapping
+    @Operation(summary = "Get books", description = "Retrieve all books or a specific book by ID")
     public Object getBookById(@RequestParam(required = false) Integer id) {
         if (id != null) {
             return bookRepository.findById(id).orElse(null);
         }
-
         return bookRepository.findAll();
     }
 
-    // POST (create a new book)
     @PostMapping
+    @Operation(summary = "Create a book", description = "Create a new book with the provided details")
     public Book createBook(@RequestParam String title,
                            @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") Date releaseDate,
                            @RequestParam Integer idAuthor,
@@ -46,8 +48,8 @@ public class BookController {
         return bookRepository.save(newBook);
     }
 
-    // PUT (update an existing book)
     @PutMapping
+    @Operation(summary = "Update a book", description = "Update an existing book's details by ID")
     public Book updateBook(@RequestParam Integer id,
                            @RequestParam(required = false) String title,
                            @RequestParam(required = false) @DateTimeFormat(pattern = "yyyy-MM-dd") Date releaseDate,
